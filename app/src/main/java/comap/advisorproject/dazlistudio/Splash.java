@@ -1,9 +1,9 @@
 package comap.advisorproject.dazlistudio;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
 
+import android.os.Bundle;
+import android.content.Intent;
 import java.util.Timer;
 import java.util.TimerTask;
 
