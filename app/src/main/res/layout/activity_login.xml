@@ -15,13 +15,13 @@
         android:layout_marginBottom="45dp"
         android:text="Login sin facebook" />
 
-    <ImageView
-        android:id="@+id/authButton"
-        android:layout_width="292dp"
-        android:layout_height="45dp"
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="52dp"
         android:layout_above="@+id/btn_login"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="29dp"
-        android:src="@drawable/btn_facebook" />
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
