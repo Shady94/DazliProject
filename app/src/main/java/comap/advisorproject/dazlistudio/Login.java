@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.facebook.appevents.AppEventsLogger;
+
 
 public class Login extends Activity{
 
@@ -26,6 +28,14 @@ public class Login extends Activity{
             }
         });
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Logs 'app deactivate' App Event.
+        AppEventsLogger.deactivateApp(this);
     }
 
 }

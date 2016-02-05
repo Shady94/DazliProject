@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.content.Intent;
 import java.util.Timer;
 import java.util.TimerTask;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 public class Splash extends Activity {
 
@@ -15,6 +17,8 @@ public class Splash extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
 
         TimerTask task =new TimerTask() {
 
@@ -30,4 +34,15 @@ public class Splash extends Activity {
         Timer timer = new Timer();
         timer.schedule(task, DURACION);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Logs 'install' and 'app activate' App Events.
+        AppEventsLogger.activateApp(this);
+    }
+
+
+
 }
