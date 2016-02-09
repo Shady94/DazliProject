@@ -8,13 +8,13 @@ import android.view.View;
 import android.widget.Button;
 
 import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
@@ -25,8 +25,10 @@ import org.json.JSONObject;
 public class Login extends Activity implements FacebookCallback<LoginResult>{
 
     Button btn_login;
-    private  LoginButton loginButton;
-    CallbackManager callbackManager;
+    private LoginButton loginButton;
+    private CallbackManager callbackManager;
+    private AccessTokenTracker accessTokenTracker;
+    private AccessToken accessToken;
 
 
     @Override
@@ -36,6 +38,7 @@ public class Login extends Activity implements FacebookCallback<LoginResult>{
         Log.d("Debbug", "Entramos en onCreate");
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
+
 
         btn_login = (Button)findViewById(R.id.btn_login);
         btn_login.setOnClickListener(new View.OnClickListener() {
@@ -48,10 +51,8 @@ public class Login extends Activity implements FacebookCallback<LoginResult>{
         });
 
         loginButton = (LoginButton)findViewById(R.id.login_button);
-        loginButton.setReadPermissions("user_friends");
-
+        loginButton.setReadPermissions("email,user_friends");
         loginButton.registerCallback(callbackManager, this);
-
     }
 
     @Override
@@ -63,43 +64,42 @@ public class Login extends Activity implements FacebookCallback<LoginResult>{
 
     @Override
     public void onSuccess(LoginResult loginResult) {
-        // App code
-        Log.d("Debbug" , "Entrando en onSuccess");
-        AccessToken.getCurrentAccessToken();
+        Log.d("Debbug", "Entrando en onSuccess");
+        //Intent vis = new Intent(getApplicationContext(), Visualizador.class);
+        //startActivity(vis);
+
         GraphRequest.newMeRequest(
                 loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
-                    public void onCompleted(JSONObject json,
-                                            GraphResponse response) {
-                        // TODO Auto-generated method stub
+                    public void onCompleted(JSONObject me, GraphResponse response) {
                         if (response.getError() != null) {
-                            // handle error
                         } else {
                             try {
-                                String email_usr = json.getString("email");
-                                String name = json.getString("name");
-                                Log.d("Debbug" , name);
+                                String email = response.getJSONObject().get("email").toString();
+                                Log.d("Debbug", "email"+email);
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                Log.d("Debbug", "Error: "+e);
                             }
+                            String email = me.optString("email");
+                            // send email and id to your web server
+                            Log.d("Debbug", response.getRawResponse());
+                            Log.d("Debbug", "JSOn: "+me);
                         }
                     }
-
                 }).executeAsync();
-        Log.d("Debbug", "Entrando en onSuccess antes de ir a visualizador");
-        Intent vis = new Intent(getApplicationContext(), Visualizador.class);
-        startActivity(vis);
+        Log.d("Debbug", "Saliendo de onSuccess");
     }
 
     @Override
     public void onCancel() {
-        // App code
+        // En caso de que se cancele el ingreso de datos
         Log.d("Debbug" , "Entrando en onCancel");
     }
 
     @Override
     public void onError(FacebookException exception) {
-        // App code
+        // En caso de que algo malo salga
         Log.d("Debbug" , "Entrando en onError");
     }
 
